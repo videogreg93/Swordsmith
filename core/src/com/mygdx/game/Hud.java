@@ -20,7 +20,7 @@ public class Hud {
   static int seconds;
   static String time;
   public static Sprite[] weaponSprites;
-  private static Sprite orderOutline;
+  public static Sprite orderOutline;
   private static Sprite redCross;
 
     private Hud() {
@@ -79,8 +79,13 @@ public class Hud {
            for (int x = 0; x < OrderSystem.allOrders.get(i).getWeapons().size(); x++) {
                // We draw each weapon of the order, starting from the top left
                int weaponOrdinal = OrderSystem.allOrders.get(i).getWeapons().get(x).ordinal();
-               batch.draw(weaponSprites[weaponOrdinal].getTexture(), (1190 - 100 * i), 750 );
+               batch.draw(weaponSprites[weaponOrdinal].getTexture(), (1170 - 100 * i), 750 );
+
+
            }
+
+            OrderSystem.allOrders.get(i).drawTimer(batch, (1168 - 100 * i),750);
+
         }
 
         for (int i = 0; i < Player.LIVESDEFAULT - Player.LIVES; i++)

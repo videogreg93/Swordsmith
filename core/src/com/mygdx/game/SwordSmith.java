@@ -196,7 +196,8 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 			OrderSystem.update();
 
 			batch.begin();
-			batch.draw(player.getTexture(), player.getPositionX(), player.getPositionY());
+			//batch.draw(player.getTexture(), player.getPositionX(), player.getPositionY());
+			player.draw(batch);
 			// draw the forges
 			copper.draw(batch);
 			iron.draw(batch);

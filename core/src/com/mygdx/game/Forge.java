@@ -132,6 +132,14 @@ public class Forge {
         return (progress >= 128);
     }
 
+    public boolean isColliding(int playerX, int playerY, int playerWidth, int playerHeight) {
+        int centerX = playerWidth/2 + playerX;
+        int centerY = playerHeight/2 + playerY;
+
+        return (centerX > positionX - 75 && centerX < positionX + 160 &&
+                centerY < positionY + 100);
+    }
+
     Player.Weapon giveWeapon() {
         Player.Weapon temp;
         if (overload >= 360) {

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -13,6 +14,9 @@ import java.util.ArrayList;
  */
 public class Player {
     // Different Sprites
+    private Sprite[] playerSprites;
+    private Sprite interactIcon;
+
     private int positionX;
     private int positionY;
     private int speed;
@@ -65,7 +69,7 @@ public class Player {
         NONE
     }
 
-    private Sprite[] playerSprites;
+
 
 
 
@@ -90,6 +94,9 @@ public class Player {
         playerSprites[13] = new Sprite(new Texture("Tiles/playerWeaponComplete/katana/playerKatanaIron.png"));
         playerSprites[14] = new Sprite(new Texture("Tiles/playerWeaponComplete/katana/playerKatanaGold.png"));
         playerSprites[15] = new Sprite(new Texture("Tiles/player.png"));
+
+        interactIcon = new Sprite(new Texture("Tiles/exclamationMark.png"));
+
         positionX = 550;
         positionY = 400;
         speed = 8;
@@ -290,19 +297,19 @@ public class Player {
         // Same principal but for the forges now
 
         // Copper Forge
-        if (x > 500 && x < 700 && y > 0 && y < 141) {
+        if (copper.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
             if (currentForgeCollision != Forge.Metal.COPPER) {
                 currentForgeCollision = Forge.Metal.COPPER;
                 System.out.println("COPPER");
             }
         }
-        else if (x > 760 && x < 995 && y > 0 && y < 141) {
+        else if (iron.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
             if (currentForgeCollision != Forge.Metal.IRON) {
                 currentForgeCollision = Forge.Metal.IRON;
                 System.out.println("IRON");
             }
         }
-        else if (x > 1050 && x < 1295 && y > 0 && y < 141) {
+        else if (gold.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
             if (currentForgeCollision != Forge.Metal.GOLD) {
                 currentForgeCollision = Forge.Metal.GOLD;
                 System.out.println("GOLD");
@@ -328,28 +335,6 @@ public class Player {
             withinDropZone = false;
         }
 
-        // Now we verify whats in the drop zone, and if it corresponds to an order then thats a sale!
-       /*
-       boolean saleCompleted = false;
-        for (int i = 0; i < deliveredWeapons.size(); i++) {
-            for (int z = 0; z < OrderSystem.allOrders.size(); z++) {
-               boolean removedWeapon =  OrderSystem.allOrders.get(z).getWeapons().remove(deliveredWeapons.get(i));
-                if (removedWeapon && OrderSystem.allOrders.get(z).getWeapons().isEmpty()) {
-                    deliveredWeapons.remove(i);
-                    System.out.println("SALE!");
-                    saleCompleted = true;
-                    OrderSystem.allOrders.remove(OrderSystem.allOrders.get(z));
-                }
-            }
-        }
-
-        if (!saleCompleted) {
-            currentlyHolding = Weapon.NONE;
-            System.out.println("WRONG WEAPON, NO SALE");
-        }
-        */
-
-
     }
 
     // Drawing
@@ -357,6 +342,13 @@ public class Player {
     Texture getTexture() {
 
         return playerSprites[currentlyHolding.ordinal()].getTexture();
+    }
+
+    public void draw(SpriteBatch batch) {
+        batch.draw(playerSprites[currentlyHolding.ordinal()].getTexture(),positionX,positionY);
+        if (currentForgeCollision != Forge.Metal.NONE || currentWeaponCollision != Weapon.NONE) {
+            batch.draw(interactIcon.getTexture(), positionX + (playerSprites[currentlyHolding.ordinal()].getWidth()/2) - interactIcon.getWidth()/2 , positionY+ playerSprites[currentlyHolding.ordinal()].getHeight() + 10 );
+        }
     }
 
     // Game State
