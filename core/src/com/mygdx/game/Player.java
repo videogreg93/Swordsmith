@@ -226,6 +226,7 @@ public class Player {
                         saleCompleted = true;
                         giveOrder.play();
                         OrderSystem.allOrders.remove(OrderSystem.allOrders.get(z));
+                        OrderSystem.orderCompleted();
                         break;
                     }
                     if (saleCompleted)

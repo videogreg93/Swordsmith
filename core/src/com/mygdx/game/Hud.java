@@ -125,6 +125,10 @@ public class Hud {
         return elapsedTime;
     }
 
+    public static void resetElapsedTime() {
+        elapsedTime = 0;
+    }
+
     public static int getSeconds() {
         return seconds;
     }

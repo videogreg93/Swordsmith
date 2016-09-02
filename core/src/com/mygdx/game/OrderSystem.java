@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -25,6 +26,11 @@ public class OrderSystem {
     private static Sound loseLife;
 
     private static float difficulty;
+
+    private static int totalNumberOfOrders;
+    private static int ordersRemaining;
+    private static int ordersCompletedThisWave;
+    private static int currentWave;
 
     // Timer graphics
     public static Texture timerOutline;
@@ -47,6 +53,11 @@ public class OrderSystem {
         timerOutline = new Texture("Tiles/orders/timerOutline.png");
         timerSprite = new NinePatch(new Texture("Tiles/orders/timer.png"));
 
+        totalNumberOfOrders = 2; // TODO magic number
+        ordersRemaining = totalNumberOfOrders;
+        ordersCompletedThisWave = 0;
+        currentWave = 1;
+
 
     }
 
@@ -57,9 +68,11 @@ public class OrderSystem {
 
     public static void update() {
         timer --;
-        if (timer <= 0) {
+        if (timer <= 0 && ordersRemaining > 0) {
             createNewOrder();
             timer = TIMERDEFAULTVALUE + (random.nextInt(480) - 240 - (int)(Hud.getElapsedTime()*difficulty)) ;
+            ordersRemaining--;
+            System.out.println("Waves remaining: " + ordersRemaining);
         }
 
         for (int i = 0; i < allOrders.size(); i++) {
@@ -72,6 +85,28 @@ public class OrderSystem {
                 loseLife.play();
 
             }
+        }
+    }
+
+    public static void orderCompleted() {
+        ordersCompletedThisWave++;
+        if (ordersCompletedThisWave == totalNumberOfOrders) {
+            System.out.println("Wave " + currentWave + " complete!");
+            // TODO increase wave number and total orders selon difficulty.
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                currentWave++;
+                    totalNumberOfOrders = 10;
+                    ordersCompletedThisWave = 0;
+                    ordersRemaining = totalNumberOfOrders;
+                    Hud.resetElapsedTime();
+                    System.out.println("Wave " + currentWave + " Begin!");
+                }
+            }
+                    , 5
+                    , 0,0
+            );
         }
     }
 
