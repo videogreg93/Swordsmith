@@ -93,6 +93,7 @@ public class OrderSystem {
 
     public static void orderCompleted() {
         ordersCompletedThisWave++;
+        Player.makeMoneyFromSale();
         if (ordersCompletedThisWave == totalNumberOfOrders) {
             System.out.println("Wave " + currentWave + " complete!");
             currentWave++;

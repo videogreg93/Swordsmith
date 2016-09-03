@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.Upgrades.Speed1;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -50,6 +51,12 @@ public class Player {
     public static int LIVESDEFAULT;
     public static int LIVES;
 
+    // Money
+    public static int money;
+
+    // Current upgrades
+    private ArrayList<Upgrade> allUpgrades;
+
     enum Weapon {
         SWORDCASE,
         SHIELDCASE,
@@ -75,6 +82,8 @@ public class Player {
 
 
     Player(Forge COPPER, Forge IRON, Forge GOLD, Anvil ANVIL) {
+
+
 
         playerSprites = new Sprite[16];
         // Init the Sprites
@@ -112,11 +121,16 @@ public class Player {
         // Number of lives
         LIVESDEFAULT = 3;
         LIVES = LIVESDEFAULT;
+        money = 0;
 
         // Init the sounds;
         pickupCase = Gdx.audio.newSound(Gdx.files.internal("Sounds/Pickup_Case.wav"));
         hitAnvil = Gdx.audio.newSound(Gdx.files.internal("Sounds/Hit_Anvil.wav"));
         giveOrder = Gdx.audio.newSound(Gdx.files.internal("Sounds/Give_Weapon.wav"));
+
+        allUpgrades = new ArrayList<Upgrade>();
+
+
 
     }
 
@@ -362,6 +376,14 @@ public class Player {
 
     public boolean isDead() {
         return (LIVES <= 0);
+    }
+
+    public static void makeMoneyFromSale() {
+        money += 5; // TODO magic number
+    }
+
+    public void addToMoveSpeed(int add) {
+        speed += add;
     }
 
 }

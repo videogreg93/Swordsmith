@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Timer;
+import com.mygdx.game.Upgrades.Speed1;
+
+import java.util.ArrayList;
 
 /**
  * Created by Gregory on 8/27/2016.
@@ -27,6 +30,14 @@ public class Hud {
 
   private static boolean showWaveText;
   private static BitmapFont fontWave;
+
+  // Upgrades
+  private static Sprite upgradeScreenSprite;
+  private static ArrayList<Upgrade> availableUpgrades;
+
+
+
+  private static Sprite[] upgradeSprites;
 
 
     private Hud() {
@@ -73,6 +84,15 @@ public class Hud {
         seconds = 0;
 
         showWaveText = true;
+
+        // Init the available upgrades
+        upgradeScreenSprite = new Sprite(new Texture("Tiles/upgrades/upgradeScreen.png"));
+        availableUpgrades = new ArrayList<Upgrade>();
+        availableUpgrades.add(new Speed1());
+
+
+        upgradeSprites = new Sprite[1];
+        upgradeSprites[Upgrade.UPGRADE.SPEED1.ordinal()] = new Sprite(new Texture("Tiles/upgrades/speed1.png"));
     }
 
     public static void update() {
@@ -107,7 +127,10 @@ public class Hud {
         }
 
         for (int i = 0; i < Player.LIVESDEFAULT - Player.LIVES; i++)
-        batch.draw(redCross,209 + (i*95), 746);
+            batch.draw(redCross,209 + (i*95), 746);
+
+        // Draw the money
+        fontTimer.draw(batch, Player.money + "$" , 510,800);
 
     }
 
@@ -169,5 +192,18 @@ public class Hud {
                 , 3
                 , 0, 0
         );
+    }
+
+    public static void drawUpgrade(SpriteBatch batch) {
+        int x = (int)((Gdx.graphics.getWidth()/2) - upgradeScreenSprite.getWidth()/2);
+        int y = (int)((Gdx.graphics.getHeight()/2) - upgradeScreenSprite.getHeight()/2);
+        batch.draw(upgradeScreenSprite.getTexture(), x, y);
+        // draw the upgrades
+        x += upgradeScreenSprite.getWidth() *0.03;
+        y += upgradeScreenSprite.getHeight() * 0.58;
+        for (int i = 0; i < availableUpgrades.size(); i++) {
+            int ordinal = availableUpgrades.get(i).type.ordinal();
+            batch.draw(upgradeSprites[ordinal].getTexture(), x + (i * (upgradeSprites[0].getWidth() + 15)), y);
+        }
     }
 }

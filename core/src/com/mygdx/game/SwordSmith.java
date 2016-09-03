@@ -43,7 +43,8 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 		HELPMENU,
 		DIFFICULTYMENU,
 		GAMEPLAY,
-		GAMEOVER
+		GAMEOVER,
+		UPGRADE
 	}
 
 	gameState currentGameState;
@@ -225,6 +226,11 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 				Hud.drawPaused(batch);
 			batch.end();
 		}
+		else if (currentGameState == gameState.UPGRADE) {
+			batch.begin();
+				Hud.drawUpgrade(batch);
+			batch.end();
+		}
 		else if (currentGameState == gameState.GAMEOVER) {
 			Gdx.gl.glClearColor(1, 0, 0, 1);
 			Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -283,15 +289,13 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 			if (keycode == Input.Keys.Z) {
 				player.interact();
 			}
-			/*if (keycode == Input.Keys.R) {
-				this.create();
-			}*/
 			if (keycode == Input.Keys.P) {
 				isPaused = !isPaused;
 			}
-			/*if (keycode == Input.Keys.Q) {
-				Player.removeLife();
-			}*/
+			if (keycode == Input.Keys.Q) {
+				currentGameState = gameState.UPGRADE;
+
+			}
 		}
 		else if (currentGameState == gameState.GAMEOVER) {
 
