@@ -63,7 +63,7 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 	Sprite nahButton;
 	Sprite buttonOutline;
 	int outlineX, outlineY;
-	Sound chooseMenu;
+	static Sound chooseMenu; // TODO this is a hack
 
 	// Help Menu
 	Sprite helpMenuBG;
@@ -273,94 +273,20 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 	public boolean keyDown(int keycode) {
 		// Movement
 		if (currentGameState == gameState.GAMEPLAY) {
-			if (keycode == Input.Keys.LEFT)
-				player.moveLeft();
-			if (keycode == Input.Keys.RIGHT)
-				player.moveRight();
-			if (keycode == Input.Keys.UP)
-				player.moveUp();
-			if (keycode == Input.Keys.DOWN)
-				player.moveDown();
-			if (keycode == Input.Keys.ESCAPE)
-				Gdx.app.exit();
-
-			// Interaction
-
-			if (keycode == Input.Keys.Z) {
-				player.interact();
-			}
-			if (keycode == Input.Keys.P) {
-				isPaused = !isPaused;
-			}
-			if (keycode == Input.Keys.Q) {
-				currentGameState = gameState.UPGRADE;
-
-			}
+			gameplayInput(keycode);
 		}
 		else if (currentGameState == gameState.GAMEOVER) {
-
-			if (keycode == Input.Keys.LEFT && outlineX != 170) {
-				outlineX = 170;
-				chooseMenu.play();
-			}
-			if (keycode == Input.Keys.RIGHT && outlineX != (170 + yeahButton.getWidth() + 50) ) {
-				outlineX = (int) (170 + yeahButton.getWidth() + 50);
-				chooseMenu.play();
-			}
-			if (keycode == Input.Keys.ENTER) {
-				if (outlineX == 170) { // play again
-					start(difficulty);
-				}
-				else {
-					Gdx.app.exit();
-				}
-			}
+			gameoverInput(keycode);
 		}
 
 		else if (currentGameState == gameState.MAINMENU) {
-			if (keycode == Input.Keys.UP && outlineY != 361) {
-				outlineY += startButton.getHeight() + 50;
-				chooseMenu.play();
-			}
-			if (keycode == Input.Keys.DOWN && outlineY != 361 - (2 * startButton.getHeight()) - 100) {
-				outlineY -= (startButton.getHeight() + 50);
-				chooseMenu.play();
-			}
-			if (keycode == Input.Keys.ENTER) {
-				if (outlineY == 361) { // play again
-					//start();
-					currentGameState = gameState.DIFFICULTYMENU;
-					outlineX = 920;
-					outlineY = 51;
-				}
-				else if (outlineY == 361 - (1 * startButton.getHeight()) - 50) {
-					currentGameState = gameState.HELPMENU;
-				}
-				else {
-					Gdx.app.exit();
-				}
-			}
+			mainMenuInput(keycode);
+		}
+		else if (currentGameState == gameState.UPGRADE) {
+			upgradeInput(keycode);
 		}
 		else if (currentGameState == gameState.DIFFICULTYMENU) {
-			if (keycode == Input.Keys.UP && outlineY != 51 + 2 * (hardButton.getHeight() + 50)) {
-				outlineY += hardButton.getHeight() + 50;
-				chooseMenu.play();
-			}
-			if (keycode == Input.Keys.DOWN && outlineY != 51) {
-				outlineY -= (hardButton.getHeight() + 50);
-				chooseMenu.play();
-			}
-			if (keycode == Input.Keys.ENTER) {
-				if (outlineY == 51) { // hard
-					start(4f);
-				}
-				else if (outlineY == 51 + (1 * hardButton.getHeight()) + 50) {
-					start(3f);
-				}
-				else {
-					start(2f);
-				}
-			}
+			difficultyMenuInput(keycode);
 		}
 
 		else if (currentGameState == gameState.HELPMENU) {
@@ -370,6 +296,111 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 		}
 
 		return true;
+	}
+
+	private void difficultyMenuInput(int keycode) {
+		if (keycode == Input.Keys.UP && outlineY != 51 + 2 * (hardButton.getHeight() + 50)) {
+            outlineY += hardButton.getHeight() + 50;
+            chooseMenu.play();
+        }
+		if (keycode == Input.Keys.DOWN && outlineY != 51) {
+            outlineY -= (hardButton.getHeight() + 50);
+            chooseMenu.play();
+        }
+		if (keycode == Input.Keys.ENTER) {
+            if (outlineY == 51) { // hard
+                start(4f);
+            }
+            else if (outlineY == 51 + (1 * hardButton.getHeight()) + 50) {
+                start(3f);
+            }
+            else {
+                start(2f);
+            }
+        }
+	}
+
+	private void mainMenuInput(int keycode) {
+		if (keycode == Input.Keys.UP && outlineY != 361) {
+            outlineY += startButton.getHeight() + 50;
+            chooseMenu.play();
+        }
+		if (keycode == Input.Keys.DOWN && outlineY != 361 - (2 * startButton.getHeight()) - 100) {
+            outlineY -= (startButton.getHeight() + 50);
+            chooseMenu.play();
+        }
+		if (keycode == Input.Keys.ENTER) {
+            if (outlineY == 361) { // play again
+                //start();
+                currentGameState = gameState.DIFFICULTYMENU;
+                outlineX = 920;
+                outlineY = 51;
+            }
+            else if (outlineY == 361 - (1 * startButton.getHeight()) - 50) {
+                currentGameState = gameState.HELPMENU;
+            }
+            else {
+                Gdx.app.exit();
+            }
+        }
+	}
+
+	private void gameoverInput(int keycode) {
+		if (keycode == Input.Keys.LEFT && outlineX != 170) {
+            outlineX = 170;
+            chooseMenu.play();
+        }
+		if (keycode == Input.Keys.RIGHT && outlineX != (170 + yeahButton.getWidth() + 50) ) {
+            outlineX = (int) (170 + yeahButton.getWidth() + 50);
+            chooseMenu.play();
+        }
+		if (keycode == Input.Keys.ENTER) {
+            if (outlineX == 170) { // play again
+                start(difficulty);
+            }
+            else {
+                Gdx.app.exit();
+            }
+        }
+	}
+
+	private void gameplayInput(int keycode) {
+		if (keycode == Input.Keys.LEFT)
+            player.moveLeft();
+		if (keycode == Input.Keys.RIGHT)
+            player.moveRight();
+		if (keycode == Input.Keys.UP)
+            player.moveUp();
+		if (keycode == Input.Keys.DOWN)
+            player.moveDown();
+		if (keycode == Input.Keys.ESCAPE)
+            Gdx.app.exit();
+
+		// Interaction
+
+		if (keycode == Input.Keys.Z) {
+            player.interact();
+        }
+		if (keycode == Input.Keys.P) {
+            isPaused = !isPaused;
+        }
+		if (keycode == Input.Keys.Q) {
+            currentGameState = gameState.UPGRADE;
+
+        }
+	}
+
+	private void upgradeInput(int keycode ) {
+		if (keycode == Input.Keys.RIGHT) {
+			Hud.moveUpgradeOutlineHorizontal(true);
+		}
+		if (keycode == Input.Keys.LEFT) {
+			Hud.moveUpgradeOutlineHorizontal(false);
+		}
+		if (keycode == Input.Keys.ENTER) {
+			player.addUpgrade(Hud.chooseUpgrade());
+			currentGameState = gameState.GAMEPLAY; // TODO this is for debugging, normally another button will do this
+		}
 	}
 
 	@Override

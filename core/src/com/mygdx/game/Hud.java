@@ -34,6 +34,7 @@ public class Hud {
   // Upgrades
   private static Sprite upgradeScreenSprite;
   private static ArrayList<Upgrade> availableUpgrades;
+  private static Sprite upgradeOutline;
 
 
 
@@ -87,9 +88,13 @@ public class Hud {
 
         // Init the available upgrades
         upgradeScreenSprite = new Sprite(new Texture("Tiles/upgrades/upgradeScreen.png"));
+        upgradeOutline = new Sprite(new Texture("Tiles/upgrades/outline.png"));
+        upgradeOutline.setX((int)((Gdx.graphics.getWidth()/2) - upgradeScreenSprite.getWidth()/2) + (int)(upgradeScreenSprite.getWidth() *0.03));
+        upgradeOutline.setY((int) ((Gdx.graphics.getHeight() / 2) - upgradeScreenSprite.getHeight() / 2) + (int) (upgradeScreenSprite.getHeight() * 0.58));
         availableUpgrades = new ArrayList<Upgrade>();
         availableUpgrades.add(new Speed1());
-
+        availableUpgrades.add(new Speed1());
+        availableUpgrades.add(new Speed1());
 
         upgradeSprites = new Sprite[1];
         upgradeSprites[Upgrade.UPGRADE.SPEED1.ordinal()] = new Sprite(new Texture("Tiles/upgrades/speed1.png"));
@@ -205,5 +210,25 @@ public class Hud {
             int ordinal = availableUpgrades.get(i).type.ordinal();
             batch.draw(upgradeSprites[ordinal].getTexture(), x + (i * (upgradeSprites[0].getWidth() + 15)), y);
         }
+        batch.draw(upgradeOutline.getTexture(), upgradeOutline.getX(), upgradeOutline.getY());
+    }
+
+    public static void moveUpgradeOutlineHorizontal(boolean moveRight) {
+        int x = (int) upgradeSprites[0].getWidth() + 15;
+        if (!moveRight)
+            x = x * -1;
+        // We gotta stay in the right values
+        int lowerBound = (int)((Gdx.graphics.getWidth()/2) - upgradeScreenSprite.getWidth()/2) + (int)(upgradeScreenSprite.getWidth() *0.03);
+        int higherBound = lowerBound + (int)((availableUpgrades.size()) * upgradeSprites[0].getWidth() + 15 );
+        if (upgradeOutline.getX() + x >= lowerBound && upgradeOutline.getX() + x <= higherBound) {
+            upgradeOutline.setX(upgradeOutline.getX() + x);
+            SwordSmith.chooseMenu.play();
+        }
+    }
+
+    public static Upgrade chooseUpgrade() {
+        int upgradePosition = (int) upgradeOutline.getX() - (int)((Gdx.graphics.getWidth()/2) - upgradeScreenSprite.getWidth()/2) + (int)(upgradeScreenSprite.getWidth() *0.03);
+        upgradePosition = (int)(upgradePosition/(upgradeSprites[0].getWidth() + 15));
+        return availableUpgrades.remove(upgradePosition);
     }
 }

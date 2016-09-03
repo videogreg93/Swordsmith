@@ -386,4 +386,9 @@ public class Player {
         speed += add;
     }
 
+    public void addUpgrade(Upgrade upgrade) {
+        upgrade.onObtain(this);
+        allUpgrades.add(upgrade);
+    }
+
 }
