@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Timer;
 
 import java.util.ArrayList;
@@ -53,10 +54,12 @@ public class OrderSystem {
         timerOutline = new Texture("Tiles/orders/timerOutline.png");
         timerSprite = new NinePatch(new Texture("Tiles/orders/timer.png"));
 
-        totalNumberOfOrders = 2; // TODO magic number
+        totalNumberOfOrders = 6; // TODO magic number
         ordersRemaining = totalNumberOfOrders;
         ordersCompletedThisWave = 0;
         currentWave = 1;
+
+        Hud.drawWaveText();
 
 
     }
@@ -92,22 +95,37 @@ public class OrderSystem {
         ordersCompletedThisWave++;
         if (ordersCompletedThisWave == totalNumberOfOrders) {
             System.out.println("Wave " + currentWave + " complete!");
+            currentWave++;
+            Hud.drawWaveText();
             // TODO increase wave number and total orders selon difficulty.
             Timer.schedule(new Timer.Task() {
-                @Override
-                public void run() {
-                currentWave++;
-                    totalNumberOfOrders = 10;
-                    ordersCompletedThisWave = 0;
-                    ordersRemaining = totalNumberOfOrders;
-                    Hud.resetElapsedTime();
-                    System.out.println("Wave " + currentWave + " Begin!");
-                }
-            }
+                               @Override
+                               public void run() {
+
+                                   totalNumberOfOrders = totalNumberOfOrders + random.nextInt(3) + 1;
+                                   // Every fifth wave we scale back a bit in the number of orders
+                                   // since we are making it harder with elapsed time
+
+                                   if (currentWave % 5 == 0)
+                                        totalNumberOfOrders -= 2;
+                                   ordersCompletedThisWave = 0;
+                                   ordersRemaining = totalNumberOfOrders;
+                                   Hud.resetElapsedTime();
+                                   System.out.println("Wave " + currentWave + " Begin!");
+
+
+
+
+                               }
+                           }
                     , 5
-                    , 0,0
+                    , 0, 0
             );
         }
+    }
+
+    public static int getCurrentWave() {
+        return currentWave;
     }
 
 
@@ -139,6 +157,8 @@ public class OrderSystem {
         public ArrayList<Player.Weapon> getWeapons() {
             return weapons;
         }
+
+
 
         public void drawTimer(SpriteBatch batch, int x, int y) {
             x = (int)(x + Hud.orderOutline.getWidth() - timerOutline.getWidth() - 10);

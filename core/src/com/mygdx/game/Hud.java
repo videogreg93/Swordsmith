@@ -6,7 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.utils.Timer;
 
 /**
  * Created by Gregory on 8/27/2016.
@@ -14,7 +16,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 public class Hud {
   static private Sprite sprite;
   static private BitmapFont fontTimer;
-    static private BitmapFont fontPaused;
+  static private BitmapFont fontPaused;
   static float elapsedTime;
   static int minutes;
   static int seconds;
@@ -22,6 +24,10 @@ public class Hud {
   public static Sprite[] weaponSprites;
   public static Sprite orderOutline;
   private static Sprite redCross;
+
+  private static boolean showWaveText;
+  private static BitmapFont fontWave;
+
 
     private Hud() {
 
@@ -57,9 +63,16 @@ public class Hud {
         parameter.color = Color.BLACK;
         fontPaused = generator.generateFont(parameter);
 
+        parameter.color = Color.WHITE;
+
+        fontWave = generator.generateFont(parameter);
+
+
         elapsedTime = 0;
         minutes = 0;
         seconds = 0;
+
+        showWaveText = true;
     }
 
     public static void update() {
@@ -72,6 +85,11 @@ public class Hud {
 
         // Draw the time
         fontTimer.draw(batch, time, 60, 796);
+
+        // Draw the current wave text, if need be
+        if (showWaveText) {
+            fontWave.draw(batch, "Wave " + OrderSystem.getCurrentWave() + " begin", (Gdx.graphics.getWidth() / 2) - 250, Gdx.graphics.getHeight() / 2);
+        }
 
         // draw the orders
         for (int i = 0; i < OrderSystem.allOrders.size(); i++) { // 1168 - 100 * i
@@ -126,7 +144,8 @@ public class Hud {
     }
 
     public static void resetElapsedTime() {
-        elapsedTime = 0;
+
+        elapsedTime = ((int)(OrderSystem.getCurrentWave() / 5)) * 5;
     }
 
     public static int getSeconds() {
@@ -134,6 +153,21 @@ public class Hud {
     }
 
     public static void drawFinalTime(SpriteBatch batch, String finalTime) {
-        fontTimer.draw(batch, "Time: \n" + finalTime,1000,700 );
+        fontTimer.draw(batch, "Time: \n" + finalTime,1000,700 ); // TODO so many magic numbers
+        fontTimer.draw(batch, "Wave " + OrderSystem.getCurrentWave(),800,700 );
+    }
+
+    public static void drawWaveText() {
+        showWaveText = true;
+        Timer.schedule(new Timer.Task() {
+                           @Override
+                           public void run() {
+
+                               showWaveText = false;
+                           }
+                       }
+                , 3
+                , 0, 0
+        );
     }
 }
