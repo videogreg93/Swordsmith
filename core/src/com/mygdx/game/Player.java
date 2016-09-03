@@ -36,6 +36,8 @@ public class Player {
 
 
     // The forges
+    // Forges
+    ArrayList<Forge> allForges;
     Forge copper;
     Forge iron;
     Forge gold;
@@ -110,9 +112,18 @@ public class Player {
         positionY = 400;
         speed = 8;
 
-        copper = COPPER;
+
+
+       /* copper = COPPER;
         iron = IRON;
-        gold = GOLD;
+        gold = GOLD;*/
+
+        allForges = new ArrayList<Forge>();
+
+        allForges.add(COPPER);
+        allForges.add(IRON);
+        allForges.add(GOLD);
+
         anvil = ANVIL;
 
         currentlyHolding = Weapon.NONE;
@@ -199,25 +210,16 @@ public class Player {
             currentlyHolding = Weapon.KATANACASE;
             pickupCase.play();
         }
-        else if (currentForgeCollision == Forge.Metal.COPPER) {
-            if (copper.insertWeapon(currentlyHolding))
-                currentlyHolding = Weapon.NONE;
-            if (copper.weaponCompleted() && currentlyHolding == Weapon.NONE)
-                currentlyHolding = copper.giveWeapon();
+        for (Forge forge: allForges
+             ) {
+            if (currentForgeCollision == forge.getMetalOutput()) {
+                if (forge.insertWeapon(currentlyHolding))
+                    currentlyHolding = Weapon.NONE;
+                if (forge.weaponCompleted() && currentlyHolding == Weapon.NONE)
+                    currentlyHolding = forge.giveWeapon();
+            }
         }
-        else if (currentForgeCollision == Forge.Metal.IRON) {
-            if (iron.insertWeapon(currentlyHolding))
-                currentlyHolding = Weapon.NONE;
-            else if (iron.weaponCompleted() && currentlyHolding == Weapon.NONE)
-                currentlyHolding = iron.giveWeapon();
-        }
-        else if (currentForgeCollision == Forge.Metal.GOLD) {
-            if (gold.insertWeapon(currentlyHolding))
-                currentlyHolding = Weapon.NONE;
-            else if (gold.weaponCompleted() && currentlyHolding == Weapon.NONE)
-                currentlyHolding = gold.giveWeapon();
-        }
-        else if (currentForgeCollision == Forge.Metal.ANVIL) {
+        if (currentForgeCollision == Forge.Metal.ANVIL) {
             if (anvil.insertWeapon(currentlyHolding))
                 currentlyHolding = Weapon.NONE;
             else if (anvil.getInProgress()) {
@@ -312,35 +314,48 @@ public class Player {
         // Same principal but for the forges now
 
         // Copper Forge
-        if (copper.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
+        /*if (copper.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
             if (currentForgeCollision != Forge.Metal.COPPER) {
-                currentForgeCollision = Forge.Metal.COPPER;
+                currentForgeCollision = copper.getMetalOutput();
                 System.out.println("COPPER");
             }
         }
         else if (iron.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
             if (currentForgeCollision != Forge.Metal.IRON) {
-                currentForgeCollision = Forge.Metal.IRON;
+                currentForgeCollision = iron.getMetalOutput();
                 System.out.println("IRON");
             }
         }
         else if (gold.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
             if (currentForgeCollision != Forge.Metal.GOLD) {
-                currentForgeCollision = Forge.Metal.GOLD;
+                currentForgeCollision = gold.getMetalOutput();
                 System.out.println("GOLD");
             }
+        }*/
+
+        currentForgeCollision = Forge.Metal.NONE;
+        for (int i = 0; i < allForges.size(); i++) {
+            Forge forge = allForges.get(i);
+            if (forge.isColliding(positionX,positionY,(int)playerSprites[15].getWidth(),(int)playerSprites[15].getHeight())) {
+                if (currentForgeCollision != forge.getMetalOutput()) {
+                    currentForgeCollision = forge.getMetalOutput();
+                    break;
+                }
+            }
         }
-        else if (x > 1017 && x < 1238 && y > 359 && y < 438) {
+
+        if (x > 1017 && x < 1238 && y > 359 && y < 438) {
             if (currentForgeCollision != Forge.Metal.ANVIL) {
                 currentForgeCollision = Forge.Metal.ANVIL;
                 System.out.println("ANVIL");
             }
         }
 
-        else if (currentForgeCollision != Forge.Metal.NONE) {
+
+       /* else if (currentForgeCollision != Forge.Metal.NONE) {
             currentForgeCollision = Forge.Metal.NONE;
             System.out.println("NO FORGE");
-        }
+        }*/
 
         // We check if we're in the drop off zone
         if (x > 474 && x < 611 && y > 489 && y < 564 ) {
@@ -389,6 +404,10 @@ public class Player {
     public void addUpgrade(Upgrade upgrade) {
         upgrade.onObtain(this);
         allUpgrades.add(upgrade);
+    }
+
+    public ArrayList<Forge> getAllForges() {
+        return allForges;
     }
 
 }

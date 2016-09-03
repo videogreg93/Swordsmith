@@ -47,7 +47,7 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
 		UPGRADE
 	}
 
-	gameState currentGameState;
+	static gameState currentGameState;
 	boolean isPaused;
 
 	// Main Menu Stuff
@@ -388,6 +388,14 @@ public class SwordSmith extends ApplicationAdapter implements InputProcessor {
             currentGameState = gameState.UPGRADE;
 
         }
+	}
+
+	public static void goToUpgradeScreen() {
+		currentGameState = gameState.UPGRADE;
+	}
+
+	public static gameState getCurrentGameState() {
+		return currentGameState;
 	}
 
 	private void upgradeInput(int keycode ) {

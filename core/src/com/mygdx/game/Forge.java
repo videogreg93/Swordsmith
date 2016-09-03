@@ -169,4 +169,16 @@ public class Forge {
         ANVIL, // Not ideal but meh
         NONE
     }
+
+    public Metal getMetalOutput() {
+        return metalOutput;
+    }
+
+    public float getProgressSpeed() {
+        return progressSpeed;
+    }
+
+    public void setProgressSpeed(float newSpeed) {
+        progressSpeed = newSpeed;
+    }
 }

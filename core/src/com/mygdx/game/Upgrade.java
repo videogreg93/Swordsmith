@@ -6,7 +6,9 @@ package com.mygdx.game;
 public class Upgrade {
     protected String name;
     public enum UPGRADE {
-        SPEED1
+        SPEED1,
+        BUILD1,
+        ORDER1
     }
     public UPGRADE type;
 

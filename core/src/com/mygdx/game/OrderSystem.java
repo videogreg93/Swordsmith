@@ -21,6 +21,7 @@ public class OrderSystem {
     public static boolean canCreateNewOrder;
     private static int timer;
     private static int TIMERDEFAULTVALUE = 600;
+    public static int minimumOrderTime = 15;
     private static Random random;
 
     private static Sound newOrder;
@@ -94,7 +95,7 @@ public class OrderSystem {
     public static void orderCompleted() {
         ordersCompletedThisWave++;
         Player.makeMoneyFromSale();
-        if (ordersCompletedThisWave == totalNumberOfOrders) {
+        if (ordersCompletedThisWave >= totalNumberOfOrders) {
             System.out.println("Wave " + currentWave + " complete!");
             currentWave++;
             Hud.drawWaveText();
@@ -103,12 +104,18 @@ public class OrderSystem {
                                @Override
                                public void run() {
 
+
                                    totalNumberOfOrders = totalNumberOfOrders + random.nextInt(3) + 1;
+
+
+
                                    // Every fifth wave we scale back a bit in the number of orders
                                    // since we are making it harder with elapsed time
 
-                                   if (currentWave % 5 == 0)
-                                        totalNumberOfOrders -= 2;
+                                   if (currentWave % 5 == 0) {
+                                       totalNumberOfOrders -= 2;
+                                       SwordSmith.goToUpgradeScreen();
+                                   }
                                    ordersCompletedThisWave = 0;
                                    ordersRemaining = totalNumberOfOrders;
                                    Hud.resetElapsedTime();
@@ -131,6 +138,8 @@ public class OrderSystem {
 
 
     public class Order {
+
+
         private ArrayList <Player.Weapon> weapons;
         public float timeToComplete;
         public int timerMaxValue;
@@ -150,7 +159,7 @@ public class OrderSystem {
             Player.Weapon temp = Player.Weapon.values()[weaponValue];
             weapons.add(temp);
 
-            timeToComplete = (random.nextInt(15) + 20 - (Hud.getElapsedTime()/30)) * 60;
+            timeToComplete = (random.nextInt(minimumOrderTime) + 20 - (Hud.getElapsedTime()/30)) * 60;
             timerMaxValue = (int)timeToComplete;
 
         }

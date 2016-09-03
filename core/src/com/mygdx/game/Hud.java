@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Timer;
+import com.mygdx.game.Upgrades.Build1;
+import com.mygdx.game.Upgrades.Order1;
 import com.mygdx.game.Upgrades.Speed1;
 
 import java.util.ArrayList;
@@ -89,19 +91,23 @@ public class Hud {
         // Init the available upgrades
         upgradeScreenSprite = new Sprite(new Texture("Tiles/upgrades/upgradeScreen.png"));
         upgradeOutline = new Sprite(new Texture("Tiles/upgrades/outline.png"));
-        upgradeOutline.setX((int)((Gdx.graphics.getWidth()/2) - upgradeScreenSprite.getWidth()/2) + (int)(upgradeScreenSprite.getWidth() *0.03));
+        upgradeOutline.setX((int) ((Gdx.graphics.getWidth() / 2) - upgradeScreenSprite.getWidth() / 2) + (int) (upgradeScreenSprite.getWidth() * 0.03));
         upgradeOutline.setY((int) ((Gdx.graphics.getHeight() / 2) - upgradeScreenSprite.getHeight() / 2) + (int) (upgradeScreenSprite.getHeight() * 0.58));
         availableUpgrades = new ArrayList<Upgrade>();
-        availableUpgrades.add(new Speed1());
-        availableUpgrades.add(new Speed1());
-        availableUpgrades.add(new Speed1());
 
-        upgradeSprites = new Sprite[1];
+        availableUpgrades.add(new Speed1());
+        availableUpgrades.add(new Build1());
+        availableUpgrades.add(new Order1());
+
+        upgradeSprites = new Sprite[3];
         upgradeSprites[Upgrade.UPGRADE.SPEED1.ordinal()] = new Sprite(new Texture("Tiles/upgrades/speed1.png"));
+        upgradeSprites[Upgrade.UPGRADE.BUILD1.ordinal()] = new Sprite(new Texture("Tiles/upgrades/build1.png"));
+        upgradeSprites[Upgrade.UPGRADE.ORDER1.ordinal()] = new Sprite(new Texture("Tiles/upgrades/order1.png"));
     }
 
     public static void update() {
         // make time advance
+
         time = getFormatedTime();
     }
 
